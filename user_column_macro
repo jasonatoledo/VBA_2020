@@ -2,18 +2,18 @@ Sub userData()
 
 ' Declare user name as variable
 Dim userName As Variant
-
+Worksheets("Users").Activate
 'Remove case sensitivity
 
 ' Assign user name variable to what user enters
-userName = InputBox("Please enter your initials in UPPERCASE!")
+userName = InputBox("Please enter the initials of the PS you want to view!", "Program Specialists")
 
 ' Add new sheet
 ActiveWorkbook.Sheets.Add After:=ActiveWorkbook.Worksheets(ActiveWorkbook.Worksheets.Count)
 
 ' Select the sheet and rename it
 ActiveSheet.Select
-ActiveSheet.Name = userName
+ActiveSheet.Name = UCase(userName)
 
 'Activate Raw Data sheet
 Worksheets("Raw Data").Activate
@@ -36,7 +36,7 @@ Worksheets("Raw Data").Activate
 For i = 2 To RowCount
 
     'Create if statement with end if to copy & paste to username sheet
-    If Cells(i, 4) = userName Then
+    If Cells(i, 4) = userName Or Cells(i, 4) = UCase(userName) Then
        
     'Copy the matching row
     Rows(i).Copy
@@ -59,6 +59,7 @@ Application.CutCopyMode = False
 'Sort on column B
 With ActiveSheet.Sort
      .SortFields.Add Key:=Range("B1"), Order:=xlAscending
+     .SortFields.Add Key:=Range("C1"), Order:=xlAscending
      .SetRange Range("A:I")
      .Header = xlYes
      .Apply
