@@ -1,9 +1,11 @@
 Sub AFM()
 
+'Range("A1").Select
+'Declare variable for input box
 Dim monthAFM As Variant
 
-monthAFM = InputBox("Please enter the AFM month number (Must be 1-12 value)")
-monthAFM = CInt(monthAFM)
+monthAFM = InputBox("Please enter the AFM month number (Must be 1-12 value)", "AFM Month", 1)
+  monthAFM = CInt(monthAFM)
 
 ' Add new sheet
 ActiveWorkbook.Sheets.Add After:=ActiveWorkbook.Worksheets(ActiveWorkbook.Worksheets.Count)
@@ -14,14 +16,14 @@ ActiveSheet.Select
 ' Declare AFM and variable name as the sheet name
 Dim afmName As String
 afmName = "AFM" & monthAFM
-ActiveSheet.Name = afmName
+  ActiveSheet.Name = afmName
 
 'Activate Raw Data sheet
 Worksheets("Raw Data").Activate
 
 'Copy header from Raw Data sheet
 ActiveSheet.Range("A1:I1").Copy
-Worksheets(afmName).Paste
+  Worksheets(afmName).Paste
 
 'Remove cell selection
 Range("A1").Select
@@ -58,6 +60,7 @@ Worksheets(afmName).Columns("A:I").AutoFit
 
 'Sort on column B
 With ActiveSheet.Sort
+     .SortFields.Add Key:=Range("D1"), Order:=xlAscending
      .SortFields.Add Key:=Range("B1"), Order:=xlAscending
      .SetRange Range("A:I")
      .Header = xlYes
