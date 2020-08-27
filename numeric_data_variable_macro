@@ -1,0 +1,70 @@
+Sub AFM()
+
+Dim monthAFM As Variant
+
+monthAFM = InputBox("Please enter the AFM month number (Must be 1-12 value)")
+monthAFM = CInt(monthAFM)
+
+' Add new sheet
+ActiveWorkbook.Sheets.Add After:=ActiveWorkbook.Worksheets(ActiveWorkbook.Worksheets.Count)
+
+' Select the sheet and rename it
+ActiveSheet.Select
+
+' Declare AFM and variable name as the sheet name
+Dim afmName As String
+afmName = "AFM" & monthAFM
+ActiveSheet.Name = afmName
+
+'Activate Raw Data sheet
+Worksheets("Raw Data").Activate
+
+'Copy header from Raw Data sheet
+ActiveSheet.Range("A1:I1").Copy
+Worksheets(afmName).Paste
+
+'Remove cell selection
+Range("A1").Select
+  Application.CutCopyMode = False
+
+'Create rowcount variable
+RowCount = Cells(Rows.Count, "A").End(xlUp).Row
+
+'Activate Raw Data Sheet
+Worksheets("Raw Data").Activate
+
+'Create loop through rows if i value of d,i through rowcount in Raw Data sheet
+For i = 2 To RowCount
+
+    'Create if statement with end if to copy & paste to username sheet
+    If Cells(i, 3) = monthAFM Then
+       
+    'Copy the matching row
+    Rows(i).Copy
+    'Paste the matching row to username sheet
+    Worksheets(afmName).Cells(2, 1).Insert
+    
+    'End if
+    End If
+    
+'Next i
+Next i
+       
+'Activate userName sheet
+Worksheets(afmName).Activate
+       
+' Autofit the columns
+Worksheets(afmName).Columns("A:I").AutoFit
+
+'Sort on column B
+With ActiveSheet.Sort
+     .SortFields.Add Key:=Range("B1"), Order:=xlAscending
+     .SetRange Range("A:I")
+     .Header = xlYes
+     .Apply
+End With
+
+'Select 1st cell and remove the header column
+Range("A1").Select
+
+End Sub
