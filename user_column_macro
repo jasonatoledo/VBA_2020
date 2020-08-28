@@ -65,7 +65,16 @@ With ActiveSheet.Sort
      .Apply
 End With
 
+'Adds current datestamp to file
+Cells(1, 10).Value = Date
+Cells(1, 10).Font.Bold = True
+Cells(1, 10).Columns.AutoFit
+
 'Select 1st cell and remove the header column
+
 Range("A1").Select
+
+'Automatically filter the sheet
+Range("A1:I1").AutoFilter _
 
 End Sub
