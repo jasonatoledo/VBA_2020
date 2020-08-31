@@ -1,0 +1,80 @@
+Sub userData()
+
+' Declare user name as variable
+Dim userName As Variant
+Worksheets("Users").Activate
+'Remove case sensitivity
+
+' Assign user name variable to what user enters
+userName = InputBox("Please enter the initials of the PS you want to view!", "Program Specialists")
+If userName = "" Then userName = "AH"
+' Add new sheet
+ActiveWorkbook.Sheets.Add After:=ActiveWorkbook.Worksheets(ActiveWorkbook.Worksheets.Count)
+
+' Select the sheet and rename it
+ActiveSheet.Select
+ActiveSheet.Name = UCase(userName)
+
+'Activate Raw Data sheet
+Worksheets("Raw Data").Activate
+
+'Copy header from Raw Data sheet
+ActiveSheet.Range("A1:I1").Copy
+Worksheets(userName).Paste
+
+'Remove cell selection
+Range("A1").Select
+  Application.CutCopyMode = False
+
+'Create rowcount variable
+RowCount = Cells(Rows.Count, "A").End(xlUp).Row
+
+'Activate Raw Data Sheet
+Worksheets("Raw Data").Activate
+
+'Create loop through rows if i value of d,i through rowcount in Raw Data sheet
+For i = 2 To RowCount
+
+    'Create if statement with end if to copy & paste to username sheet
+    If Cells(i, 4) Like "*" & userName & "*" Or Cells(i, 4) Like "*" & UCase(userName) & "*" Then
+       
+    'Copy the matching row
+    Rows(i).Copy
+    'Paste the matching row to username sheet
+    Worksheets(userName).Cells(2, 1).Insert
+    
+    'End if
+    End If
+    
+'Next i
+Next i
+       
+'Activate userName sheet
+Worksheets(userName).Activate
+       
+' Autofit the columns
+Worksheets(userName).Columns("A:I").AutoFit
+Application.CutCopyMode = False
+
+'Sort on column B
+With ActiveSheet.Sort
+     .SortFields.Add Key:=Range("B1"), Order:=xlAscending
+     .SortFields.Add Key:=Range("C1"), Order:=xlAscending
+     .SetRange Range("A:I")
+     .Header = xlYes
+     .Apply
+End With
+
+'Adds current datestamp to file
+Cells(1, 10).Value = Date
+Cells(1, 10).Font.Bold = True
+Cells(1, 10).Columns.AutoFit
+
+'Select 1st cell and remove the header column
+
+Range("A1").Select
+
+'Automatically filter the sheet
+Range("A1:I1").AutoFilter _
+
+End Sub
