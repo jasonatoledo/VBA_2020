@@ -70,6 +70,11 @@ Cells(1, 10).Value = Date
 Cells(1, 10).Font.Bold = True
 Cells(1, 10).Columns.AutoFit
 
+'Freeze top row
+ActiveWindow.FreezePanes = False
+Rows("2:2").Select
+ActiveWindow.FreezePanes = True
+
 'Select 1st cell and remove the header column
 
 Range("A1").Select
