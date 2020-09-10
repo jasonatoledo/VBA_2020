@@ -1,0 +1,109 @@
+Sub AllAfmData()
+
+' Declare user name as variable
+'Dim userName As Variant
+Worksheets("Users").Activate
+'Remove case sensitivity
+
+' Add new sheet
+ActiveWorkbook.Sheets.Add After:=ActiveWorkbook.Worksheets(ActiveWorkbook.Worksheets.Count)
+
+' Select the sheet and rename it
+ActiveSheet.Select
+ActiveSheet.Name = "All AFM"
+
+'Activate Raw Data sheet
+Worksheets("Raw Data").Activate
+
+'Copy header from Raw Data sheet
+ActiveSheet.Range("A1:J1000").Copy
+Worksheets("All AFM").Paste
+
+'Create rowcount variable
+RowCount = Cells(Rows.Count, "A").End(xlUp).Row
+
+'Activate Raw Data Sheet
+Worksheets("Raw Data").Activate
+
+'Create loop through rows if i value of d,i through rowcount in Raw Data sheet
+'For i = 2 To RowCount
+
+    'Create if statement with end if to copy & paste to username sheet
+    'If Cells(i, 4) = userName Or Cells(i, 4) = UCase(userName) Then
+       
+    'Copy the matching row
+    'Rows(i).Copy
+    'Paste the matching row to username sheet
+    'Worksheets("All PS").Cells(2, 1).Insert
+    
+    'End if
+    'End If
+    
+'Next i
+'Next i
+       
+'Activate userName sheet
+Worksheets("All AFM").Activate
+       
+' Autofit the columns
+Worksheets("All AFM").Columns("A:J").AutoFit
+Application.CutCopyMode = False
+
+
+'Sort on column B
+With ActiveSheet.Sort
+     .SortFields.Add Key:=Range("C1"), Order:=xlAscending, CustomOrder:="10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9"
+     .SortFields.Add Key:=Range("B1"), Order:=xlAscending
+     .SetRange Range("A:J")
+     .Header = xlYes
+     .Apply
+End With
+
+'Freeze top row
+'ActiveWindow.FreezePanes = False
+'Rows("2:2").Select
+'ActiveWindow.FreezePanes = True
+
+'Select 1st cell and remove the header column
+Range("A1").Select
+
+'Set margins to Narrow
+With ActiveSheet.PageSetup
+    .LeftMargin = Application.InchesToPoints(0.25)
+    .RightMargin = Application.InchesToPoints(0.25)
+    .TopMargin = Application.InchesToPoints(0.75)
+    .BottomMargin = Application.InchesToPoints(0.75)
+    .HeaderMargin = Application.InchesToPoints(0.3)
+    .FooterMargin = Application.InchesToPoints(0.3)
+End With
+
+'Change print view
+ActiveWindow.View = xlPageLayoutView
+
+With ActiveSheet.PageSetup
+    .Zoom = False
+    .FitToPagesTall = False
+    .FitToPagesWide = 2
+    End With
+
+'Add headers & footers
+With ActiveSheet.PageSetup
+    .LeftHeader = "Confidential"
+    .CenterHeader = "Region 9 GRANT ASSIGNMENTS" & vbCr & "Sorted by: AFM + Grantee"
+    .RightHeader = "&" & "[Date]"
+    .LeftFooter = ""
+    .CenterFooter = "INTERNAL"
+    .RightFooter = "&" & "[PAGE]"
+End With
+
+'Set header row to all pages
+ActiveSheet.PageSetup.PrintTitleRows = ActiveSheet.Rows(1).Address
+
+'Go back to the top
+Range("A1").Select
+Application.CutCopyMode = False
+
+'Automatically filter the sheet
+'Range("A1:J1").AutoFilter _
+
+End Sub
